@@ -4,7 +4,7 @@ type CurrentWeather {
   time: DateTime
   weathercode: Int
   winddirection: Int
-  windspeed: Float
+  windspeed: Int
 }
 type Daily {
   apparent_temperature_max: [Float]

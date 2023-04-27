@@ -83,7 +83,7 @@ function CityPicker() {
                 latitude: city.latitude!,
                 longitude: city.longitude!,
                 countryCode: city.countryCode,
-                name: city.countryCode,
+                name: city.name,
                 stateCode: city.stateCode,
               },
               label: city.name,

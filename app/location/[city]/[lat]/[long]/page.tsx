@@ -6,8 +6,10 @@ import RainChart from "@/components/RainChart";
 import StatCard from "@/components/StatCard";
 import TempChart from "@/components/TempChart";
 import fetchWeatherQuery from "@/graphql/queries/fetchWeatherQueries";
+import cleanData from "@/helpers/cleanData";
+import getBasePath from "@/helpers/getBasePath";
 
-export const revalidate = 60;
+export const revalidate = 1440;
 
 type Props = {
   params: {
@@ -32,7 +34,18 @@ async function WeatherPage({ params: { city, lat, long } }: Props) {
 
   const results: Root = data.myQuery;
 
-  // console.log(results);
+  const dataToSend = cleanData(results, city);
+
+  const res = await fetch(`${getBasePath()}/api/getWeatherSummary`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "applicaiton/json",
+    },
+    body: JSON.stringify({ weatherData: dataToSend }),
+  });
+
+  const GPTdata = await res.json();
+  const { content } = GPTdata;
 
   return (
     <div className="flex flex-col min-h-screen md:flex-row">
@@ -50,18 +63,18 @@ async function WeatherPage({ params: { city, lat, long } }: Props) {
           </div>
 
           <div className="m-2 mb-10">
-            <CalloutCard message="This is where GPT-4 Summary will go!" />
+            <CalloutCard message={content} />
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 m-2">
             <StatCard
               title="Maximum Temperature"
-              metric={`${results.daily.temperature_2m_max[0].toFixed(1)}°`}
+              metric={`${results.daily.temperature_2m_max[0].toFixed(1)}°C`}
               color="yellow"
             />
             <StatCard
               title="Minimum Temperature"
-              metric={`${results.daily.temperature_2m_min[0].toFixed(1)}°`}
+              metric={`${results.daily.temperature_2m_min[0].toFixed(1)}°C`}
               color="green"
             />
             <div>
@@ -80,7 +93,7 @@ async function WeatherPage({ params: { city, lat, long } }: Props) {
             <div className="flex space-x-3">
               <StatCard
                 title="Wind Speed"
-                metric={`${results.current_weather.windspeed.toFixed(1)}m/s`}
+                metric={`${results.current_weather.windspeed.toFixed(1)}km/h`}
                 color="cyan"
               />
               <StatCard

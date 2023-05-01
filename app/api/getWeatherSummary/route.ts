@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       {
         role: "system",
         content:
-          "Pretend you're a Meteorologists who is reporting on the weather. Introduce yourself as a weather reporter. Then give a very short summary of todays weather only. Make the summary easy to understand. Assume the data came from your own research team.",
+          "Pretend you're a Meteorologists who is reporting on the weather. Introduce yourself as a weather reporter. Then give a very short summary of todays weather only. Make the summary easy to understand. Assume the data came from your own research team. End the summary of todays weather with a short joke about the weather.",
       },
       {
         role: "user",
